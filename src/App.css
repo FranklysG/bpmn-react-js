@@ -1,0 +1,8 @@
+.djs-palette.two-column.open {
+    width: 50px;
+}
+
+.djs-palette-entries > .group {
+    display: grid;
+    align-content: center;
+}
