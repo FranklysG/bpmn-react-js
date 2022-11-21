@@ -17,9 +17,9 @@ export default function MagicPropertiesProvider(propertiesPanel, translate) {
         }
       };
 
-      // if (is(element, "bpmn:StartEvent")) {
+      if (is(element, "bpmn:StartEvent")) {
         groups.push(magicTab);
-      // }/
+      }
 
       return groups;
     };
