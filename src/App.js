@@ -2,23 +2,30 @@ import "bpmn-js/dist/assets/diagram-js.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
 import "bpmn-js-properties-panel/dist/assets/element-templates.css";
 import "bpmn-js-properties-panel/dist/assets/properties-panel.css";
+import "@bpmn-io/element-template-chooser/dist/element-template-chooser.css";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import "./App.css";
 
 import Modeler from "bpmn-js/lib/Modeler";
+import download from "downloadjs";
+import ElementTemplateChooserModule from "@bpmn-io/element-template-chooser";
 
 import {
   BpmnPropertiesPanelModule,
   BpmnPropertiesProviderModule,
   ZeebePropertiesProviderModule,
+  CloudElementTemplatesPropertiesProviderModule,
 } from "bpmn-js-properties-panel";
 
-import ZeebeBpmnModdle from "./override/zeebe.json";
+import ZeebeModdle from "zeebe-bpmn-moddle/resources/zeebe.json";
+import MagicPropertiesProvider from "./Providers/Magic";
+import magicDescriptor from './assets/magic.json'
 
-// import CamundaBpmnModdle from "camunda-bpmn-moddle/resources/camunda.json";
 import axios from "axios";
+import TEMPLATES_PROPERTY from "./assets/template.json";
+import DEFAULT_DIAGRAM from "./assets/diagram.bpmn";
 
 function App() {
   const [diagram, diagramSet] = useState("");
@@ -31,16 +38,27 @@ function App() {
     if (bjsContainer.length === 0) {
       return new Modeler({
         container,
-        propertiesPanel: {
-          parent: panel,
-        },
         additionalModules: [
           BpmnPropertiesPanelModule,
           BpmnPropertiesProviderModule,
+          MagicPropertiesProvider,
           ZeebePropertiesProviderModule,
+          CloudElementTemplatesPropertiesProviderModule,
+          ElementTemplateChooserModule,
         ],
+        exporter: {
+          name: "element-template-chooser-demo",
+          version: "0.0.0",
+        },
+        keyboard: {
+          bindTo: document,
+        },
+        propertiesPanel: {
+          parent: panel,
+        },
         moddleExtensions: {
-          zeebe: ZeebeBpmnModdle,
+          zeebe: ZeebeModdle,
+          magic: magicDescriptor
         },
       });
     }
@@ -48,10 +66,11 @@ function App() {
 
   useEffect(() => {
     if (diagram.length === 0) {
-      diagramSet("<?xml version='1.0' encoding='UTF-8'?>");
+      diagramSet(DEFAULT_DIAGRAM);
     }
     (async () => {
-      await modeler.createDiagram();
+      await modeler.createDiagram(DEFAULT_DIAGRAM);
+      await modeler.get("elementTemplatesLoader").setTemplates(TEMPLATES_PROPERTY);
     })();
   }, [diagram, modeler]);
 
@@ -61,14 +80,17 @@ function App() {
 
   const handleUserSave = useCallback(async () => {
     try {
-      await modeler.saveXML().then((xml) => console.log(xml));
-      console.log("save");
+      await modeler.saveXML({ format: true }, (err, xml) => {
+        if (!err) {
+          download(xml, "diagram.bpmn", "application/xml");
+        }
+      });
     } catch (error) {
       console.log(error);
     }
   }, [modeler]);
 
-  const handleUserImport = useCallback(async () => {
+  const handleUserImport = useCallback(async (url) => {
     try {
       if (url !== "") {
         await axios
@@ -99,7 +121,7 @@ function App() {
     } catch (error) {
       console.log(error);
     }
-  }, [modeler, diagram, url]);
+  }, [modeler, diagram]);
 
   return (
     <div
@@ -129,7 +151,7 @@ function App() {
           </button>
         </div>
         <div>
-          <button onClick={handleUserSave}>SAVE</button>
+          <button onClick={handleUserSave}>DOWNLOAD</button>
           <button onClick={handleUserCreate}>CREATE</button>
         </div>
       </div>

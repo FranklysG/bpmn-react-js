@@ -1,0 +1,42 @@
+{
+  "name": "Magic",
+  "prefix": "magic",
+  "uri": "http://magic",
+  "xml": {
+    "tagAlias": "lowerCase"
+  },
+  "associations": [],
+  "types": [
+    {
+      "name": "BewitchedStartEvent",
+      "extends": [
+        "bpmn:BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "spell",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    },{
+      "name": "MagicServiceTask",
+      "extends": [
+        "bpmn:StartEvent",
+        "bpmn:ServiceTask",
+        "bpmn:BusinessRuleTask",
+        "bpmn:ScriptTask",
+        "bpmn:SendTask",
+        "bpmn:EndEvent",
+        "bpmn:IntermediateThrowEvent"
+      ],
+      "properties": [
+        {
+          "name": "spellProps",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}
