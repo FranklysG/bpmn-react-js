@@ -6,7 +6,8 @@
       "description": "A Email sending task.",
       "documentationRef": "https://github.com/bpmn-io/element-template-chooser",
       "appliesTo": [
-        "bpmn:ServiceTask"
+        "bpmn:ServiceTask",
+        "bpmn:StartEvent"
       ],
       "category": {
         "id": "communication",

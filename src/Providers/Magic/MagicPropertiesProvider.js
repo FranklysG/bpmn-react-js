@@ -5,17 +5,21 @@ const LOW_PRIORITY = 500;
 
 
 export default function MagicPropertiesProvider(propertiesPanel, translate) {
-  this.getGroups = function (element) {
+  this.getGroups = async function (element) {
     return (groups) => {
       var magicTab = {
         id: "magic",
         label: "Magic",
-        groups: createMagicGroup(element, translate)
+        groups: {
+          id: 'magic-spell',
+          label: translate('Magic properties'),
+          entries: SpellProps(element, translate)
+        }
       };
 
-      if (is(element, "bpmn:StartEvent")) {
+      // if (is(element, "bpmn:StartEvent")) {
         groups.push(magicTab);
-      }
+      // }/
 
       return groups;
     };
@@ -23,17 +27,3 @@ export default function MagicPropertiesProvider(propertiesPanel, translate) {
 
   propertiesPanel.registerProvider(LOW_PRIORITY, this);
 }
-
-function createMagicGroup(element, translate) {
-
-  // create a group called "Magic properties".
-  const magicGroup = {
-    id: 'magic',
-    label: translate('Magic properties'),
-    entries: SpellProps(element, translate)
-  };
-
-  return magicGroup
-}
-
-MagicPropertiesProvider.$inject = [ 'propertiesPanel', 'translate' ];

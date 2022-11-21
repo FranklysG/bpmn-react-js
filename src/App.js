@@ -1,3 +1,4 @@
+import "bpmn-js/dist/assets/bpmn-js.css";
 import "bpmn-js/dist/assets/diagram-js.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
 import "bpmn-js-properties-panel/dist/assets/element-templates.css";
@@ -41,10 +42,10 @@ function App() {
         additionalModules: [
           BpmnPropertiesPanelModule,
           BpmnPropertiesProviderModule,
-          MagicPropertiesProvider,
           ZeebePropertiesProviderModule,
           CloudElementTemplatesPropertiesProviderModule,
           ElementTemplateChooserModule,
+          MagicPropertiesProvider,
         ],
         exporter: {
           name: "element-template-chooser-demo",

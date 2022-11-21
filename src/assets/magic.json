@@ -8,18 +8,6 @@
   "associations": [],
   "types": [
     {
-      "name": "BewitchedStartEvent",
-      "extends": [
-        "bpmn:BaseElement"
-      ],
-      "properties": [
-        {
-          "name": "spell",
-          "isAttr": true,
-          "type": "String"
-        }
-      ]
-    },{
       "name": "MagicServiceTask",
       "extends": [
         "bpmn:StartEvent",
